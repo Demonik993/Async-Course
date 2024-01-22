@@ -2,6 +2,7 @@
 
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
+const serchCountry = document.querySelector('.whatcountry');
 
 ///////////////////////////////////////
 // https://countries-api-836d.onrender.com/countries/ //Countries API
@@ -46,6 +47,14 @@ const getCountryWithNeighbourds = function (countryName) {
     renderCountry(country);
   });
 };
-getCountryWithNeighbourds('poland');
+serchCountry.addEventListener('submit', function (e) {
+  e.preventDefault();
+  const searchValue = document.querySelector('#country').value;
+  const searchThis = searchValue.trim().toLowerCase();
+  countriesContainer.innerHTML = '';
+  getCountryWithNeighbourds(searchThis);
+
+  console.log(searchThis);
+});
 // getCountry('usa');
 // getCountry('portugal');

@@ -14,12 +14,15 @@ body {
   color: #555;
   background-color: #f7f7f7;
   min-height: 100vh;
-
+flex-direction: column;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
+.whatcountry{
+  margin-bottom: 20px;
+  font-size: larger;
+}
 .container {
   display: flex;
   flex-flow: column;
