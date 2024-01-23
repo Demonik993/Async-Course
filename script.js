@@ -79,13 +79,15 @@ const getCountry = function (country) {
     .then(response => response.json())
     .then(data => {
       renderCountry(data[0]);
-      const neighbour = data[0].borders?.[0];
+      const neighbours = data[0].borders;
+      console.log(neighbours);
 
-      if (!neighbour) return;
-
-      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`)
-        .then(response => response.json())
-        .then(data => renderCountry(data[0], 'neighbour'));
+      if (!neighbours) return;
+      neighbours.forEach(element => {
+        return fetch(`https://restcountries.com/v3.1/alpha/${element}`)
+          .then(response => response.json())
+          .then(data => renderCountry(data[0], 'neighbour'));
+      });
     });
 };
 getCountry('poland');
