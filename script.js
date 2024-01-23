@@ -6,7 +6,7 @@ const serchCountry = document.querySelector('.whatcountry');
 
 ///////////////////////////////////////
 // https://countries-api-836d.onrender.com/countries/ //Countries API
-
+/*
 const renderCountry = function (country, className = '') {
   const html = `<article class="country ${className}">
         <img class="country__img" alt=${country.flags.alt} src=${
@@ -62,6 +62,7 @@ const getCountryWithNeighbourds = function (countryName) {
     });
   });
 };
+*/
 serchCountry.addEventListener('submit', function (e) {
   e.preventDefault();
   const searchValue = document.querySelector('#country').value;
@@ -69,5 +70,15 @@ serchCountry.addEventListener('submit', function (e) {
   countriesContainer.innerHTML = '';
   getCountryWithNeighbourds(searchThis);
 });
-getCountryWithNeighbourds('poland');
+// getCountryWithNeighbourds('poland');
 // getCountry('portugal');
+// const request = fetch(`https://restcountries.com/v3.1/name/poland`);
+// console.log(request);
+const getCountry = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`).then(function (
+    response
+  ) {
+    console.log(response);
+  });
+};
+getCountry('poland');
