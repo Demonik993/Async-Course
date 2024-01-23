@@ -6,7 +6,7 @@ const serchCountry = document.querySelector('.whatcountry');
 
 ///////////////////////////////////////
 // https://countries-api-836d.onrender.com/countries/ //Countries API
-/*
+
 const renderCountry = function (country, className = '') {
   const html = `<article class="country ${className}">
         <img class="country__img" alt=${country.flags.alt} src=${
@@ -31,7 +31,7 @@ const renderCountry = function (country, className = '') {
   countriesContainer.insertAdjacentHTML('beforeend', html);
   countriesContainer.style.opacity = 1;
 };
-
+/*
 const getCountryWithNeighbourds = function (countryName) {
   //country call AJAX 1
   const request = new XMLHttpRequest();
@@ -68,17 +68,15 @@ serchCountry.addEventListener('submit', function (e) {
   const searchValue = document.querySelector('#country').value;
   const searchThis = searchValue.trim().toLowerCase();
   countriesContainer.innerHTML = '';
-  getCountryWithNeighbourds(searchThis);
+  getCountry(searchThis);
 });
 // getCountryWithNeighbourds('poland');
 // getCountry('portugal');
 // const request = fetch(`https://restcountries.com/v3.1/name/poland`);
 // console.log(request);
 const getCountry = function (country) {
-  fetch(`https://restcountries.com/v3.1/name/${country}`).then(function (
-    response
-  ) {
-    console.log(response);
-  });
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => renderCountry(data[0]));
 };
 getCountry('poland');
