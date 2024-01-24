@@ -29,7 +29,6 @@ const renderCountry = function (country, className = '') {
         </div>
       </article>`;
   countriesContainer.insertAdjacentHTML('beforeend', html);
-  countriesContainer.style.opacity = 1;
 };
 /*
 const getCountryWithNeighbourds = function (countryName) {
@@ -63,6 +62,10 @@ const getCountryWithNeighbourds = function (countryName) {
   });
 };
 */
+const renderError = function (msg) {
+  countriesContainer.innerHTML = '';
+  countriesContainer.insertAdjacentText('beforeend', msg);
+};
 serchCountry.addEventListener('submit', function (e) {
   e.preventDefault();
   const searchValue = document.querySelector('#country').value;
@@ -88,6 +91,13 @@ const getCountry = function (country) {
           .then(response => response.json())
           .then(data => renderCountry(data[0], 'neighbour'));
       });
-    });
+    })
+    .catch(err => {
+      console.error(`${err}`);
+      renderError(`Something went wrong ${err}, try again.`);
+    })
+    .finally(() => (countriesContainer.style.opacity = 1));
 };
-getCountry('poland');
+btn.addEventListener('click', function () {
+  getCountry('poland');
+});
