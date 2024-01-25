@@ -14,7 +14,7 @@ const renderCountry = function (country, className = '') {
   } />
         <div class="country__data">
             <h3 class="country__name">${country.name.official} (${
-    Object.values(country.name)[1]
+    country.name.common
   })</h3>
             <h4 class="country__region">${country.region}</h4>
             <p class="country__row"><span>👫</span>${(
@@ -85,10 +85,46 @@ const getJSON = function (url, errMsg = 'Something went wrong') {
     return response.json();
   });
 };
-const whereAmI = function (lat, lng) {
-  return fetch(
-    `https://geocode.xyz/${lat},${lng}?geoit=json&auth=147265429663054124807x78512`
+const getCountry = function (country) {
+  getJSON(
+    `https://restcountries.com/v3.1/name/${country}`,
+    `Country ${country} wasn't found`
   )
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbours = data[0].borders;
+
+      //   if (!neighbours) throw new Error(`Neighbour wasn't found`);
+      if (!neighbours) return;
+      neighbours.forEach(element => {
+        return getJSON(
+          `https://restcountries.com/v3.1/alpha/${element}`,
+          `Neighbour ${element} wasn't found`
+        ).then(data => renderCountry(data[0], 'neighbour'));
+      });
+    })
+    .catch(err => {
+      console.error(`${err}`);
+      renderError(`Something went wrong ${err}, try again.`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+      btn.style.opacity = 0;
+    });
+};
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+const whereAmI = function () {
+  getPosition()
+    .then(pos => {
+      const { latitude: lat, longitude: lng } = pos.coords;
+      return fetch(
+        `https://geocode.xyz/${lat},${lng}?geoit=json&auth=147265429663054124807x78512`
+      );
+    })
     .then(response => {
       if (!response.ok)
         throw new Error(
@@ -97,10 +133,9 @@ const whereAmI = function (lat, lng) {
       return response.json();
     })
     .then(data => {
-      const country = data.country;
-      const city = data.city;
       return data.country.toLowerCase();
     })
+    .then(country => getCountry(country))
     .catch(err => alert(err));
 };
 // const getCountry = function (country) {
@@ -132,53 +167,26 @@ const whereAmI = function (lat, lng) {
 //     })
 //     .finally(() => (countriesContainer.style.opacity = 1));
 // };
-const getCountry = function (country) {
-  getJSON(
-    `https://restcountries.com/v3.1/name/${country}`,
-    `Country ${country} wasn't found`
-  )
-    .then(data => {
-      renderCountry(data[0]);
-      const neighbours = data[0].borders;
+btn.addEventListener('click', whereAmI);
+// function () {
+//   navigator.geolocation.getCurrentPosition(
+//     position => {
+//       const lat = position.coords.latitude;
+//       const lng = position.coords.longitude;
+//   whereAmI().then(data => getCountry(data));
+// },
+// error => {
+//   console.error('Error getting the current position:', error.message);
+// });
 
-      //   if (!neighbours) throw new Error(`Neighbour wasn't found`);
-      if (!neighbours) return;
-      neighbours.forEach(element => {
-        return getJSON(
-          `https://restcountries.com/v3.1/alpha/${element}`,
-          `Neighbour ${element} wasn't found`
-        ).then(data => renderCountry(data[0], 'neighbour'));
-      });
-    })
-    .catch(err => {
-      console.error(`${err}`);
-      renderError(`Something went wrong ${err}, try again.`);
-    })
-    .finally(() => {
-      countriesContainer.style.opacity = 1;
-      btn.style.opacity = 0;
-    });
-};
-btn.addEventListener('click', function () {
-  navigator.geolocation.getCurrentPosition(
-    position => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-      whereAmI(lat, lng).then(data => getCountry(data));
-    },
-    error => {
-      console.error('Error getting the current position:', error.message);
-    }
-  );
-
-  //   getJSON(`https://restcountries.com/v3.1/alpha/${location.slice(-2)}`)
-  //     .then(data => {
-  //       const country = data[0].name.common.toLowerCase();
-  //       if (!country) throw new Error('Something went wrong');
-  //       return country;
-  //     })
-  //     .then(data => getCountry(data));
-});
+//   getJSON(`https://restcountries.com/v3.1/alpha/${location.slice(-2)}`)
+//     .then(data => {
+//       const country = data[0].name.common.toLowerCase();
+//       if (!country) throw new Error('Something went wrong');
+//       return country;
+//     })
+//     .then(data => getCountry(data));
+// });
 
 /* 
 In this challenge you will build a function 'whereAmI' which renders a country ONLY based on GPS coordinates. 
@@ -230,27 +238,27 @@ GOOD LUCK 😀
 // whereAmI(19.037, 72.873);
 // whereAmI(-33.933, 18.474);
 
-// new Promise:
+// // new Promise:
 
-const promiseLottery = new Promise(function (resolve, reject) {
-  console.log('Lottery is run...');
-  setTimeout(function () {
-    if (Math.random() >= 0.5) resolve('You win ');
-    else reject(new Error('You lost'));
-  }, 2000);
-});
-promiseLottery.then(res => console.log(res)).catch(err => console.error(err));
+// const promiseLottery = new Promise(function (resolve, reject) {
+//   console.log('Lottery is run...');
+//   setTimeout(function () {
+//     if (Math.random() >= 0.5) resolve('You win ');
+//     else reject(new Error('You lost'));
+//   }, 2000);
+// });
+// promiseLottery.then(res => console.log(res)).catch(err => console.error(err));
 
-//Promising setTimeOut
-const wait = seconds => {
-  return new Promise(res => setTimeout(res, seconds * 1000));
-};
-wait(2)
-  .then(() => {
-    console.log('Waited 2 seconds');
-    return wait(3);
-  })
-  .then(() => console.log('I waited for 3 seconds'));
-// to call promise imediately - put it in micro line
-Promise.resolve('abc').then(res => console.log(res));
-Promise.reject(new Error('f**ck this')).catch(res => console.error(res));
+// //Promising setTimeOut
+// const wait = seconds => {
+//   return new Promise(res => setTimeout(res, seconds * 1000));
+// };
+// wait(2)
+//   .then(() => {
+//     console.log('Waited 2 seconds');
+//     return wait(3);
+//   })
+//   .then(() => console.log('I waited for 3 seconds'));
+// // to call promise imediately - put it in micro line
+// Promise.resolve('abc').then(res => console.log(res));
+// Promise.reject(new Error('f**ck this')).catch(res => console.error(res));
