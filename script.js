@@ -229,3 +229,28 @@ GOOD LUCK 😀
 // whereAmI(52.508, 13.381);
 // whereAmI(19.037, 72.873);
 // whereAmI(-33.933, 18.474);
+
+// new Promise:
+
+const promiseLottery = new Promise(function (resolve, reject) {
+  console.log('Lottery is run...');
+  setTimeout(function () {
+    if (Math.random() >= 0.5) resolve('You win ');
+    else reject(new Error('You lost'));
+  }, 2000);
+});
+promiseLottery.then(res => console.log(res)).catch(err => console.error(err));
+
+//Promising setTimeOut
+const wait = seconds => {
+  return new Promise(res => setTimeout(res, seconds * 1000));
+};
+wait(2)
+  .then(() => {
+    console.log('Waited 2 seconds');
+    return wait(3);
+  })
+  .then(() => console.log('I waited for 3 seconds'));
+// to call promise imediately - put it in micro line
+Promise.resolve('abc').then(res => console.log(res));
+Promise.reject(new Error('f**ck this')).catch(res => console.error(res));
