@@ -370,21 +370,19 @@ const whereIAm = async function () {
     if (!geoResponse.ok) throw new Error(`Can't get geolocation`);
     const geoData = await geoResponse.json();
     const country = geoData.country;
-
     //
     const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
-    // if (!res.ok) throw new Error(`Can't get country`);
+    if (!res.ok) throw new Error(`Can't get country`);
     const data = await res.json();
     renderCountry(data[0]);
+    return `You are in ${geoData.city}`;
   } catch (err) {
+    console.error(err.message);
     renderError(err.message);
+
+    throw err;
   }
 };
-// whereIAm();
-// whereIAm();
-// whereIAm();
-// whereIAm();
-// whereIAm();
 // whereIAm();
 // console.log('first');
 
@@ -395,3 +393,18 @@ const whereIAm = async function () {
 // } catch (err) {
 //   alert(err.message);
 // }
+console.log(`1: First value`);
+// whereIAm()
+//   .then(res => console.log(`2: ${res}`))
+//   .catch(err => console.error(`2: ${err.message})`))
+//   .finally(() => console.log(`3: Third value `));
+
+(async function () {
+  try {
+    const city = await whereIAm();
+    console.log(`2: ${city}`);
+  } catch (err) {
+    console.error(`2: ${err.message})`);
+  }
+  console.log(`3: Third value `);
+})();
