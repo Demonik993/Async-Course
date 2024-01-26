@@ -359,20 +359,39 @@ GOOD LUCK 😀
 //   .catch(err => console.error(err));
 
 const whereIAm = async function () {
-  const pos = await getPosition();
+  try {
+    const pos = await getPosition();
 
-  const { latitude: lat, longitude: lng } = pos.coords;
+    const { latitude: lat, longitude: lng } = pos.coords;
 
-  const geoResponse = await fetch(
-    `https://geocode.xyz/${lat},${lng}?geoit=json&auth=147265429663054124807x78512`
-  );
-  const geoData = await geoResponse.json();
-  const country = geoData.country.toLowerCase();
+    const geoResponse = await fetch(
+      `https://geocode.xyz/${lat},${lng}?geoit=json&auth=147265429663054124807x78512`
+    );
+    if (!geoResponse.ok) throw new Error(`Can't get geolocation`);
+    const geoData = await geoResponse.json();
+    const country = geoData.country;
 
-  //
-  const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
-  const data = await res.json();
-  renderCountry(data[0]);
+    //
+    const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
+    // if (!res.ok) throw new Error(`Can't get country`);
+    const data = await res.json();
+    renderCountry(data[0]);
+  } catch (err) {
+    renderError(err.message);
+  }
 };
-whereIAm();
-console.log('first');
+// whereIAm();
+// whereIAm();
+// whereIAm();
+// whereIAm();
+// whereIAm();
+// whereIAm();
+// console.log('first');
+
+// try {
+//   let a = 3;
+//   const b = 2;
+//   b = 4;
+// } catch (err) {
+//   alert(err.message);
+// }
