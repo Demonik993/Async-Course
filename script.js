@@ -8,6 +8,8 @@ const serchCountry = document.querySelector('.whatcountry');
 // https://countries-api-836d.onrender.com/countries/ //Countries API
 
 const renderCountry = function (country, className = '') {
+  countriesContainer.style.opacity = 1;
+
   const html = `<article class="country ${className}">
         <img class="country__img" alt=${country.flags.alt} src=${
     country.flags.png
@@ -291,67 +293,86 @@ Network tab, otherwise images load too fast.
 
 GOOD LUCK 😀
 */
-serchCountry.innerHTML = '';
-countriesContainer.innerHTML = '';
-btn.remove();
-const imgContainer = document.querySelector('.images');
+// serchCountry.innerHTML = '';
+// countriesContainer.innerHTML = '';
+// btn.remove();
+// const imgContainer = document.querySelector('.images');
 
-const createImage = function (url) {
-  return new Promise(function (res, rej) {
-    const img = document.createElement('img');
-    img.src = url;
-    // img.classList.add = 'images';
-    // if (img) res(body.appendChild(img));
-    // else rej(new Error(`Can't load this shit`));
-    img.addEventListener('load', () => {
-      imgContainer.append(img);
-      res(img);
-    });
-    img.addEventListener('error', () => {
-      rej(new Error('Image not found'));
-    });
-  });
-};
+// const createImage = function (url) {
+//   return new Promise(function (res, rej) {
+//     const img = document.createElement('img');
+//     img.src = url;
+//     // img.classList.add = 'images';
+//     // if (img) res(body.appendChild(img));
+//     // else rej(new Error(`Can't load this shit`));
+//     img.addEventListener('load', () => {
+//       imgContainer.append(img);
+//       res(img);
+//     });
+//     img.addEventListener('error', () => {
+//       rej(new Error('Image not found'));
+//     });
+//   });
+// };
+// // createImage('img/img-1.jpg')
+// //   .then(img => console.log('Img loaded'))
+// //   .catch(err => console.error(err));
+// // createImage('img/img-4.jpg')
+// //   .then(img => console.log('Img loaded'))
+// //   .catch(err => console.error(err));
+// // createImage('img/img-2.jpg');
+// // createImage('img/img-3.png');
+// let currentImg;
 // createImage('img/img-1.jpg')
-//   .then(img => console.log('Img loaded'))
+//   .then(img => {
+//     currentImg = img;
+//     console.log(`Img 1 loaded`);
+//     return wait(2);
+//   })
+//   .then(() => {
+//     currentImg.style.display = 'none';
+//     return createImage('img/img-2.jpg');
+//   })
+//   .then(img => {
+//     currentImg = img;
+//     console.log(`Img 2 loaded`);
+//     return wait(2);
+//   })
+//   .then(() => {
+//     currentImg.style.display = 'none';
+//     return createImage('img/img-3.jpg');
+//   })
+//   .then(img => {
+//     currentImg = img;
+//     console.log(`Img 3 loaded`);
+//     return wait(2);
+//   })
+//   .then(() => {
+//     currentImg.style.display = 'none';
+//     return createImage('img/img-4.jpg');
+//   })
+//   .then(img => {
+//     currentImg = img;
+//     console.log(`Img 4 loaded`);
+//     return wait(2);
+//   })
 //   .catch(err => console.error(err));
-// createImage('img/img-4.jpg')
-//   .then(img => console.log('Img loaded'))
-//   .catch(err => console.error(err));
-// createImage('img/img-2.jpg');
-// createImage('img/img-3.png');
-let currentImg;
-createImage('img/img-1.jpg')
-  .then(img => {
-    currentImg = img;
-    console.log(`Img 1 loaded`);
-    return wait(2);
-  })
-  .then(() => {
-    currentImg.style.display = 'none';
-    return createImage('img/img-2.jpg');
-  })
-  .then(img => {
-    currentImg = img;
-    console.log(`Img 2 loaded`);
-    return wait(2);
-  })
-  .then(() => {
-    currentImg.style.display = 'none';
-    return createImage('img/img-3.jpg');
-  })
-  .then(img => {
-    currentImg = img;
-    console.log(`Img 3 loaded`);
-    return wait(2);
-  })
-  .then(() => {
-    currentImg.style.display = 'none';
-    return createImage('img/img-4.jpg');
-  })
-  .then(img => {
-    currentImg = img;
-    console.log(`Img 4 loaded`);
-    return wait(2);
-  })
-  .catch(err => console.error(err));
+
+const whereIAm = async function () {
+  const pos = await getPosition();
+
+  const { latitude: lat, longitude: lng } = pos.coords;
+
+  const geoResponse = await fetch(
+    `https://geocode.xyz/${lat},${lng}?geoit=json&auth=147265429663054124807x78512`
+  );
+  const geoData = await geoResponse.json();
+  const country = geoData.country.toLowerCase();
+
+  //
+  const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
+  const data = await res.json();
+  renderCountry(data[0]);
+};
+whereIAm();
+console.log('first');
