@@ -425,16 +425,58 @@ GOOD LUCK 😀
 //     console.error(err);
 //   }
 // };
-const get3Countries = async function (...countries) {
-  try {
-    const data = await Promise.all([
-      ...countries.map(el =>
-        getJSON(`https://restcountries.com/v3.1/name/${el}`)
-      ),
-    ]);
-    console.log(data.map(d => d[0].capital[0]));
-  } catch (err) {
-    console.error(err);
-  }
-};
-get3Countries('italy', 'france', 'spain', 'poland');
+// const get3Countries = async function (...countries) {
+//   try {
+//     const data = await Promise.all([
+//       ...countries.map(el =>
+//         getJSON(`https://restcountries.com/v3.1/name/${el}`)
+//       ),
+//     ]);
+//     console.log(data.map(d => d[0].capital[0]));
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
+// get3Countries('italy', 'france', 'spain', 'poland');
+// (async function () {
+//   const res = await Promise.race([
+//     getJSON(`https://restcountries.com/v3.1/name/poland`),
+//     getJSON(`https://restcountries.com/v3.1/name/germany`),
+//     getJSON(`https://restcountries.com/v3.1/name/usa`),
+//   ]);
+//   console.log(res[0].name);
+// })();
+
+// const timeout = function (sec) {
+//   return new Promise(function (_, reject) {
+//     setTimeout(() => reject(new Error('Too long!!')), sec * 1000);
+//   });
+// };
+// Promise.race([
+//   getJSON(`https://restcountries.com/v3.1/name/poland`),
+//   timeout(0.1),
+// ])
+//   .then(res => console.log(res))
+//   .catch(err => console.error(err));
+Promise.allSettled([
+  Promise.resolve('DONE'),
+  Promise.resolve('DONE2'),
+  Promise.reject('error'),
+  Promise.reject('done3'),
+]).then(res => console.log(res));
+Promise.all([
+  Promise.resolve('DONE'),
+  Promise.resolve('DONE2'),
+  Promise.reject('error'),
+  Promise.resolve('done3'),
+])
+  .then(res => console.log(res))
+  .catch(err => console.log(err));
+Promise.any([
+  Promise.reject('error'),
+  Promise.reject('error'),
+  Promise.reject('error'),
+  Promise.reject('done3'),
+])
+  .then(res => console.log(res))
+  .catch(err => console.log(err));
