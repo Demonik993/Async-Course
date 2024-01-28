@@ -358,31 +358,31 @@ GOOD LUCK 😀
 //   })
 //   .catch(err => console.error(err));
 
-const whereIAm = async function () {
-  try {
-    const pos = await getPosition();
+// const whereIAm = async function () {
+//   try {
+//     const pos = await getPosition();
 
-    const { latitude: lat, longitude: lng } = pos.coords;
+//     const { latitude: lat, longitude: lng } = pos.coords;
 
-    const geoResponse = await fetch(
-      `https://geocode.xyz/${lat},${lng}?geoit=json&auth=147265429663054124807x78512`
-    );
-    if (!geoResponse.ok) throw new Error(`Can't get geolocation`);
-    const geoData = await geoResponse.json();
-    const country = geoData.country;
-    //
-    const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
-    if (!res.ok) throw new Error(`Can't get country`);
-    const data = await res.json();
-    renderCountry(data[0]);
-    return `You are in ${geoData.city}`;
-  } catch (err) {
-    console.error(err.message);
-    renderError(err.message);
+//     const geoResponse = await fetch(
+//       `https://geocode.xyz/${lat},${lng}?geoit=json&auth=147265429663054124807x78512`
+//     );
+//     if (!geoResponse.ok) throw new Error(`Can't get geolocation`);
+//     const geoData = await geoResponse.json();
+//     const country = geoData.country;
+//     //
+//     const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
+//     if (!res.ok) throw new Error(`Can't get country`);
+//     const data = await res.json();
+//     renderCountry(data[0]);
+//     return `You are in ${geoData.city}`;
+//   } catch (err) {
+//     console.error(err.message);
+//     renderError(err.message);
 
-    throw err;
-  }
-};
+//     throw err;
+//   }
+// };
 // whereIAm();
 // console.log('first');
 
@@ -393,18 +393,48 @@ const whereIAm = async function () {
 // } catch (err) {
 //   alert(err.message);
 // }
-console.log(`1: First value`);
 // whereIAm()
 //   .then(res => console.log(`2: ${res}`))
 //   .catch(err => console.error(`2: ${err.message})`))
 //   .finally(() => console.log(`3: Third value `));
 
-(async function () {
+// (async function () {
+//   try {
+//     const city = await whereIAm();
+//     console.log(`2: ${city}`);
+//   } catch (err) {
+//     console.error(`2: ${err.message})`);
+//   }
+//   console.log(`3: Third value `);
+// })();
+// const get3Countries = async function (c1, c2, c3) {
+//   try {
+//     const data = await Promise.all([
+//       getJSON(`https://restcountries.com/v3.1/name/${c1}`),
+//       getJSON(`https://restcountries.com/v3.1/name/${c2}`),
+//       getJSON(`https://restcountries.com/v3.1/name/${c3}`),
+//     ]);
+//     console.log(data.map(d => d[0].capital[0]));
+
+//     // const [data1] = await getJSON(`https://restcountries.com/v3.1/name/${c1}`);
+//     // const [data2] = await getJSON(`https://restcountries.com/v3.1/name/${c2}`);
+//     // const [data3] = await getJSON(`https://restcountries.com/v3.1/name/${c3}`);
+//     //
+//     // console.log([data1.capital[0], data2.capital[0], data3.capital[0]]);
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
+const get3Countries = async function (...countries) {
   try {
-    const city = await whereIAm();
-    console.log(`2: ${city}`);
+    const data = await Promise.all([
+      ...countries.map(el =>
+        getJSON(`https://restcountries.com/v3.1/name/${el}`)
+      ),
+    ]);
+    console.log(data.map(d => d[0].capital[0]));
   } catch (err) {
-    console.error(`2: ${err.message})`);
+    console.error(err);
   }
-  console.log(`3: Third value `);
-})();
+};
+get3Countries('italy', 'france', 'spain', 'poland');
