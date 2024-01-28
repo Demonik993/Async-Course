@@ -70,9 +70,10 @@ const renderError = function (msg) {
 };
 serchCountry.addEventListener('submit', function (e) {
   e.preventDefault();
-  const searchValue = document.querySelector('#country').value;
-  const searchThis = searchValue.trim().toLowerCase();
+  const searchValue = document.querySelector('#country');
+  const searchThis = searchValue.value.trim().toLowerCase();
   countriesContainer.innerHTML = '';
+  searchValue.value = '';
   getCountry(searchThis);
 });
 // getCountryWithNeighbourds('poland');
@@ -500,49 +501,49 @@ TEST DATA: ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']. To test, turn of
 
 GOOD LUCK 😀
 */
-serchCountry.innerHTML = '';
-countriesContainer.innerHTML = '';
-btn.remove();
-const imgContainer = document.querySelector('.images');
+// serchCountry.innerHTML = '';
+// countriesContainer.innerHTML = '';
+// btn.remove();
+// const imgContainer = document.querySelector('.images');
 
-const createImage = function (url) {
-  return new Promise(function (res, rej) {
-    const img = document.createElement('img');
-    img.src = url;
-    img.addEventListener('load', () => {
-      imgContainer.append(img);
-      res(img);
-    });
-    img.addEventListener('error', () => {
-      rej(new Error('Image not found'));
-    });
-  });
-};
-const loadNPause = async function () {
-  try {
-    let img = await createImage('img/img-1.jpg');
-    console.log('Image 1 loaded');
-    await wait(2);
-    img.style.display = 'none';
-    img = await createImage('img/img-2.jpg');
-    console.log('Image 2 loaded');
-    await wait(2);
-    img.style.display = 'none';
-    img = await createImage('img/img-3.jpg');
-    console.log('Image 3 loaded');
-    await wait(2);
-  } catch (err) {
-    console.error(err);
-  }
-};
-const images = ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg'];
-const loadAll = async function (imgArr) {
-  try {
-    const imgs = imgArr.map(async img => await createImage(img));
-    const imgsEl = await Promise.all(imgs);
-    imgsEl.forEach(el => el.classList.add('paralell'));
-  } catch (err) {
-    console.error(err);
-  }
-};
-loadAll(images);
+// const createImage = function (url) {
+//   return new Promise(function (res, rej) {
+//     const img = document.createElement('img');
+//     img.src = url;
+//     img.addEventListener('load', () => {
+//       imgContainer.append(img);
+//       res(img);
+//     });
+//     img.addEventListener('error', () => {
+//       rej(new Error('Image not found'));
+//     });
+//   });
+// };
+// const loadNPause = async function () {
+//   try {
+//     let img = await createImage('img/img-1.jpg');
+//     console.log('Image 1 loaded');
+//     await wait(2);
+//     img.style.display = 'none';
+//     img = await createImage('img/img-2.jpg');
+//     console.log('Image 2 loaded');
+//     await wait(2);
+//     img.style.display = 'none';
+//     img = await createImage('img/img-3.jpg');
+//     console.log('Image 3 loaded');
+//     await wait(2);
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
+// const images = ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg'];
+// const loadAll = async function (imgArr) {
+//   try {
+//     const imgs = imgArr.map(async img => await createImage(img));
+//     const imgsEl = await Promise.all(imgs);
+//     imgsEl.forEach(el => el.classList.add('paralell'));
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
+// loadAll(images);
